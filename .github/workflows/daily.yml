@@ -1,0 +1,26 @@
+name: Daily Trends Email
+on:
+  schedule:
+    - cron: '0 13 * * *' # Runs daily at 9AM Florida time (13:00 UTC)
+  workflow_dispatch: # This adds a manual "Run" button on GitHub
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3 # Copies your code to the server
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          
+      - name: Install dependencies
+        run: pip install requests
+        
+      - name: Run Script
+        env:
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          EMAIL_RECEIVER: ${{ secrets.EMAIL_RECEIVER }}
+        run: python update_trends.py
