@@ -1,8 +1,57 @@
-# Source - https://stackoverflow.com/questions/70192495/what-node-version-used-if-not-specified-it-in-github-actions
-# Posted by sho
-# Retrieved 4/30/2026, License - CC BY-SA 4.0
+# .github/workflows/daily-trends-email.yml
+name: Daily Trends Email
 
-- name: Set up Node js
-  uses: actions/setup-node@v6
-  width:
-     node-version: 24
+on:
+  schedule:
+    - cron: '0 13 * * *'   # runs daily at 13:00 UTC
+  workflow_dispatch:
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1) Checkout repository (always first)
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2) Ensure Node runtime (opt into Node.js 24 now)
+      #    Optional but useful to avoid runtime mismatch warnings for JS actions.
+      - name: Ensure Node.js 24 (optional)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      # 3) Set up Python (before installing deps)
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      # 4) Show runtime info (debug) so logs show the environment
+      - name: Show runtime info (debug)
+        run: |
+          echo "Runner OS: $RUNNER_OS"
+          echo "WORKFLOW: $GITHUB_WORKFLOW"
+          node --version || true
+          npm --version || true
+          python --version
+          python -m pip --version
+          env | sort
+
+      # 5) Install Python dependencies with verbose output
+      - name: Install dependencies
+        run: |
+          set -x
+          python -m pip install --upgrade pip
+          pip install --upgrade requests beautifulsoup4 lxml google-api-python-client
+          python -m pip check
+
+      # 6) Execute your script with secrets only on the run step
+      - name: Execute Automation (verbose)
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+        run: |
+          set -x          # echo each command for debugging
+          python -u update_trends.py
