@@ -1,53 +1,8 @@
-yaml
+# Source - https://stackoverflow.com/questions/70192495/what-node-version-used-if-not-specified-it-in-github-actions
+# Posted by sho
+# Retrieved 4/30/2026, License - CC BY-SA 4.0
 
-name: Daily Trends Email
-
-on:
-  schedule:
-    - cron: '0 13 * * *'
-  workflow_dispatch:
-
-jobs:
-  run-script:
-    runs-on: ubuntu-latest
-    steps:
-      # 1. Checkout repo first so subsequent steps have your code
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      # 2. (Optional) Ensure Node if you need JS actions or want to inspect node runtime
-      - name: Ensure Node (optional)
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-
-      # 3. Set up Python before installing Python packages
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      # 4. Show runtime info (debug) to capture versions and environment
-      - name: Show runtime info (debug)
-        run: |
-          echo "Runner OS: $RUNNER_OS"
-          node --version || true
-          npm --version || true
-          python --version
-          python -m pip --version
-
-      # 5. Install Python dependencies
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install --upgrade requests beautifulsoup4 lxml google-api-python-client
-          python -m pip check
-
-      # 6. Run your script with secrets provided to that step
-      - name: Execute Automation (verbose)
-        env:
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
-        run: |
-          set -x
-          python -u update_trends.py
+- name: Set up Node js
+  uses: actions/setup-node@v6
+  width:
+     node-version: 24
