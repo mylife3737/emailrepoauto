@@ -9,8 +9,7 @@ jobs:
   run-script:
     runs-on: ubuntu-latest
 
-    # Optional temporary opt-in: forces JS-based actions to run on Node.js 24 now.
-    # Long-term: remove this once all actions you use are updated to target Node 24.
+    # Temporary opt-in: forces JS-based actions to run on Node.js 24 now.
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
 
@@ -42,7 +41,7 @@ jobs:
         run: |
           set -x
           python -m pip install --upgrade pip
-          pip install --upgrade requests beautifulsoup4 lxml google-api-python-client
+          python -m pip install --upgrade requests beautifulsoup4 lxml google-api-python-client
           python -m pip check
 
       - name: Execute Automation (verbose)
