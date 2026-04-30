@@ -5,7 +5,7 @@ on:
     - cron: '0 13 * * *'   # runs daily at 13:00 UTC
   workflow_dispatch:        # enable manual trigger
 
-# Set environment variable globally to force Node.js 24 usage for all JavaScript actions
+# Set environment variable globally to force Node.js 24 usage for all JS actions
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
 
@@ -17,8 +17,8 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Only keep setup-node if you run Node.js scripts. 
-      # If not needed, this step can be removed to avoid complexity.
+      # Only keep setup-node if your workflow runs Node.js code.
+      # This is optional but recommended for workflows that run JS actions.
       - name: Ensure Node.js 24 (optional, recommended)
         uses: actions/setup-node@v4
         with:
