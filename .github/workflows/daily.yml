@@ -58,5 +58,5 @@ jobs:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
         run: |
-          set -x          # echo each command for debugging
+          set -x
           python -u update_trends.py
