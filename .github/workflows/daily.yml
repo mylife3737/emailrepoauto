@@ -9,13 +9,19 @@ jobs:
   run-script:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4 # Updated from v3
       
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5 # Updated from v4
         with:
           python-version: '3.10'
           
       - name: Install dependencies
         run: |
           pip install requests beautifulsoup4 lxml
+        
+      - name: Run script
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+        run: python update_trends.py
