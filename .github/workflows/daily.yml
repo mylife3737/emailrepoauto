@@ -3,13 +3,13 @@ name: Daily Trends Email
 on:
   schedule:
     - cron: '0 13 * * *'   # runs daily at 13:00 UTC
-  workflow_dispatch:      # enable manual dispatch
+  workflow_dispatch:        # enable manual trigger
 
 jobs:
   run-script:
     runs-on: ubuntu-latest
 
-    # Temporary opt-in: forces JS-based actions to run on Node.js 24 now.
+    # Force JavaScript actions to run on Node.js 24 (to avoid Node.js 20 deprecation)
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
 
@@ -17,7 +17,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Ensure Node.js 24 (optional)
+      - name: Ensure Node.js 24 (optional, recommended)
         uses: actions/setup-node@v4
         with:
           node-version: '24'
