@@ -1,11 +1,12 @@
 yaml
 
+---
 name: Daily Trends Email
 
 on:
   schedule:
     - cron: '0 13 * * *'   # runs daily at 13:00 UTC
-  workflow_dispatch:
+  workflow_dispatch: true
 
 jobs:
   run-script:
@@ -32,31 +33,3 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-
-      # 4) Show runtime info (debug)
-      - name: Show runtime info (debug)
-        run: |
-          echo "Runner OS: $RUNNER_OS"
-          echo "Workflow: $GITHUB_WORKFLOW"
-          node --version || true
-          npm --version || true
-          python --version
-          python -m pip --version
-          env | sort
-
-      # 5) Install Python dependencies with verbose output
-      - name: Install dependencies
-        run: |
-          set -x
-          python -m pip install --upgrade pip
-          pip install --upgrade requests beautifulsoup4 lxml google-api-python-client
-          python -m pip check
-
-      # 6) Execute your script with secrets only on the run step
-      - name: Execute Automation (verbose)
-        env:
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
-        run: |
-          set -x
-          python -u update_trends.py
